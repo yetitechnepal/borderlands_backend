@@ -34,7 +34,7 @@
                     <i class="flaticon-right-arrow"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Quick Dates</a>
+                    <a href="#">Package Includes</a>
                 </li>
             </ul>
     </div>
@@ -44,10 +44,10 @@
         <div class="card">
 				<div class="card-header">
 					<div class="d-flex align-items-center">
-						<h4 class="card-title">Add Quick Dates</h4>
+						<h4 class="card-title">Add What package includes!</h4>
 						<button class="btn btn-primary btn-round ml-auto" data-toggle="modal" data-target="#addRowModal">
 							<i class="fa fa-plus"></i>
-							Add Quick Dates
+							Add What package includes!
 						</button>
 					</div>
 				</div>
@@ -58,7 +58,7 @@
 							<div class="modal-content">
 								<div class="modal-header no-bd">
 									<h5 class="modal-title">
-										New Quick Dates
+                                        Add What package includes!
 									</h5>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 										<span aria-hidden="true">&times;</span>
@@ -66,28 +66,22 @@
 								</div>
 								<div class="modal-body">
 									<p class="small">Create a new row using this form, make sure you fill them all</p>
-									<form action="{{route('quickdates.add')}}" method="post" enctype="multipart/form-data">
+									<form action="{{route('whatsincluded.add')}}" method="post" enctype="multipart/form-data">
                                         @csrf
 										<input type="hidden" name="id" value="{{$PackageInfo['id']}}">
 										<div class="row">
-											<div class="col-sm-12">
+
+                                            <div class="col-sm-12">
 												<div class="form-group form-group-default">
-													<label>Select Date</label>
-													<input required id="quickdate" type="date" class="form-control" name='quickdate' placeholder="quickdate">
+													<label>Title</label>
+													<input required id="title" type="text" class="form-control" name='title' placeholder="Title">
 												</div>
 											</div>
 
                                             <div class="col-sm-12">
 												<div class="form-group form-group-default">
-													<label>Days</label>
-													<input required id="days" type="text" class="form-control" name='days' placeholder="days">
-												</div>
-											</div>
-
-                                            <div class="col-sm-12">
-												<div class="form-group form-group-default">
-													<label>Rate</label>
-													<input required id="rate" type="number" class="form-control" name='rate' placeholder="rate">
+													<label>Description</label>
+													<textarea required id="description" class="form-control" name='description' placeholder="description"></textarea>
 												</div>
 											</div>
 
@@ -103,18 +97,16 @@
 					</div>
 
                     <div class="card-body row">
-                            @foreach ($quickdates as $quickdate) 
+                            @foreach ($whatsincludeds as $whatsincluded) 
                             <div class="card-list col-md-2">
                                 <div class="item-list " style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);padding-right:10px" >
                                     <div class="info-user ml-3">
-                                        <div class="username">Date : {{$quickdate->quickdate}}</div>
-                                        <div class="status">Days   :{{$quickdate->days}}</div>
-                                        <div class="status">Rate: {{$quickdate->rate}}\per person</div>
-                                        <div class="status"></div>
+                                        <div class="username">{{$whatsincluded->title}}</div>
+                                        <div class="status">{{$whatsincluded->description}}</div>
                                     </div>
-                                    <form action="{{route('quickdates.destroy')}}" method="post">
+                                    <form action="{{route('whatsincluded.destroy')}}" method="post">
 										@csrf
-										<input type="hidden" name="id" value="{{$quickdate->id}}" >
+										<input type="hidden" name="id" value="{{$whatsincluded->id}}" >
 										<button type="submit" class="btn btn-icon btn-danger btn-round btn-xs">
                                             <i class="fa fa-trash"></i>
                                         </button>

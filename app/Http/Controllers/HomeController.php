@@ -178,4 +178,8 @@ class HomeController extends Controller
         return ['message'=>'success',
                 'data'=>$data]; 
     }
+
+    public function getEvents($month){
+        
+    }
 }

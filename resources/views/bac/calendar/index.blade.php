@@ -5,7 +5,12 @@
 	<title>Admin - Borderlands</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
 	<link rel="icon" href="{{ asset('/bac/img/icon.ico')}}" type="image/x-icon"/>
-	
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
 	<!-- Fonts and icons -->
 	<script src="{{ asset('/bac/js/plugin/webfont/webfont.min.js')}}"></script>
 	<script>
@@ -21,6 +26,16 @@
 	<!-- CSS Files -->
 	<link rel="stylesheet" href="{{ asset('/bac/css/bootstrap.min.css')}}">
 	<link rel="stylesheet" href="{{ asset('/bac/css/atlantis.min.css')}}">
+
+    <style>
+        .fc-title{
+            color:white!important;
+        }
+
+        .fc-time{
+            display:none!important;
+        }
+    </style>
 </head>
 <body>
 <div class="wrapper sidebar_minimize">
@@ -127,8 +142,7 @@
 											<span class="sub-item">Videos</span>
 										</a>
 									</li>
-
-									<li>
+                                    <li>
 										<a href="/fullcalendareventmaster">
 											<span class="sub-item">Events</span>
 										</a>
@@ -143,7 +157,68 @@
 		<div class="main-panel">
 			<div class="content">
                 <div class="page-inner">
-					@yield('content')
+					<div class="">
+						<div class="card">
+							<div class="card-header">
+								<div class="d-flex align-items-center">
+									<h4 class="card-title">Add a Event</h4>
+									<button class="btn btn-primary btn-round ml-auto" data-toggle="modal" data-target="#addRowModal">
+										<i class="fa fa-plus"></i>
+										Add a Event
+									</button>
+								</div>
+							</div>
+							<div class="card-body">
+
+								<!-- Modal -->
+								<div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header no-bd">
+												<h5 class="modal-title">
+													New Event
+												</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<p class="small">Create a new row using this form, make sure you fill them all</p>
+												<form action="{{route('event.add')}}" method="post" enctype="multipart/form-data">
+													@csrf
+													<div class="">
+															<div class="form-group form-group-default">
+																<label>Title</label>
+																<input required id="title" type="text" class="form-control" name='title' placeholder="title">
+															</div>
+															<div class="form-group form-group-default">
+																<label>Select Start Date</label>
+																<input required id="start" type="date" class="form-control" name='start'>
+															</div>
+
+														
+
+															<div class="form-group form-group-default">
+																<label>Select End Date</label>
+																<input required id="end" type="date" class="form-control" name='end'>
+															</div>
+													</div>
+												
+													<div class="modal-footer no-bd">
+														<button type="submit" id="addPackage" class="btn btn-primary">Add</button>
+														<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="response alert alert-success mt-2" style="display: none;"></div>
+								<div id='calendar'></div>  
+							</div>
+						</div>
+                    </div>
 				</div>
 			</div>
 			<footer class="footer">
@@ -156,80 +231,9 @@
 			</footer>
 		</div>
 		
-		<!-- Custom template | don't include it in your project! -->
-		<div class="custom-template">
-			<div class="title">Settings</div>
-			<div class="custom-content">
-				<div class="switcher">
-					<div class="switch-block">
-						<h4>Logo Header</h4>
-						<div class="btnSwitch">
-							<button type="button" class="changeLogoHeaderColor" data-color="dark"></button>
-							<button type="button" class="selected changeLogoHeaderColor" data-color="blue"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="green"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="red"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="white"></button>
-							<br/>
-							<button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
-							<button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
-						</div>
-					</div>
-					<div class="switch-block">
-						<h4>Navbar Header</h4>
-						<div class="btnSwitch">
-							<button type="button" class="changeTopBarColor" data-color="dark"></button>
-							<button type="button" class="changeTopBarColor" data-color="blue"></button>
-							<button type="button" class="changeTopBarColor" data-color="purple"></button>
-							<button type="button" class="changeTopBarColor" data-color="light-blue"></button>
-							<button type="button" class="changeTopBarColor" data-color="green"></button>
-							<button type="button" class="changeTopBarColor" data-color="orange"></button>
-							<button type="button" class="changeTopBarColor" data-color="red"></button>
-							<button type="button" class="changeTopBarColor" data-color="white"></button>
-							<br/>
-							<button type="button" class="changeTopBarColor" data-color="dark2"></button>
-							<button type="button" class="selected changeTopBarColor" data-color="blue2"></button>
-							<button type="button" class="changeTopBarColor" data-color="purple2"></button>
-							<button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
-							<button type="button" class="changeTopBarColor" data-color="green2"></button>
-							<button type="button" class="changeTopBarColor" data-color="orange2"></button>
-							<button type="button" class="changeTopBarColor" data-color="red2"></button>
-						</div>
-					</div>
-					<div class="switch-block">
-						<h4>Sidebar</h4>
-						<div class="btnSwitch">
-							<button type="button" class="selected changeSideBarColor" data-color="white"></button>
-							<button type="button" class="changeSideBarColor" data-color="dark"></button>
-							<button type="button" class="changeSideBarColor" data-color="dark2"></button>
-						</div>
-					</div>
-					<div class="switch-block">
-						<h4>Background</h4>
-						<div class="btnSwitch">
-							<button type="button" class="changeBackgroundColor" data-color="bg2"></button>
-							<button type="button" class="changeBackgroundColor selected" data-color="bg1"></button>
-							<button type="button" class="changeBackgroundColor" data-color="bg3"></button>
-							<button type="button" class="changeBackgroundColor" data-color="dark"></button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="custom-toggle">
-				<i class="flaticon-settings"></i>
-			</div>
-		</div>
-		<!-- End Custom template -->
 	</div>
 	<!--   Core JS Files   -->
-	<script src="{{ asset('/bac/js/core/jquery.3.2.1.min.js')}}"></script>
+	<!-- <script src="{{ asset('/bac/js/core/jquery.3.2.1.min.js')}}"></script> -->
 	<script src="{{ asset('/bac/js/core/popper.min.js')}}"></script>
 	<script src="{{ asset('/bac/js/core/bootstrap.min.js')}}"></script>
 	<!-- jQuery UI -->
@@ -290,5 +294,96 @@
 			});
 		});
 	</script>
+    <script>
+    $(document).ready(function () {
+        var SITEURL = "{{url('/')}}";
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+ 
+        var calendar = $('#calendar').fullCalendar({
+            editable: true,
+            events: SITEURL + "/fullcalendareventmaster",
+            displayEventTime: true,
+            editable: true,
+            eventRender: function (event, element, view) {
+                if (event.allDay === 'true') {
+                    event.allDay = true;
+                } else {
+                    event.allDay = false;
+                }
+            },
+            selectable: true,
+            selectHelper: true,
+            select: function (start, end, allDay) {
+                var title = prompt('Event Title:');
+ 
+                if (title) {
+                    var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+                    var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+ 
+                    $.ajax({
+                        url: SITEURL + "/fullcalendareventmaster/create",
+                        data: 'title=' + title + '&start=' + start + '&end=' + end,
+                        type: "POST",
+                        success: function (data) {
+                            displayMessage("Added Successfully");
+                            $('#calendar').fullCalendar('removeEvents');
+                            $('#calendar').fullCalendar('refetchEvents' );
+                        }
+                    });
+                    calendar.fullCalendar('renderEvent',
+                            {
+                                title: title,
+                                start: start,
+                                end: end,
+                                allDay: allDay
+                            },
+                    true
+                            );
+                }
+                calendar.fullCalendar('unselect');
+            },
+             
+            eventDrop: function (event, delta) {
+                        var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+                        var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+                        $.ajax({
+                            url: SITEURL + '/fullcalendareventmaster/update',
+                            data: 'title=' + event.title + '&start=' + start + '&end=' + end + '&id=' + event.id,
+                            type: "POST",
+                            success: function (response) {
+                                displayMessage("Updated Successfully");
+                            }
+                        });
+                    },
+            eventClick: function (event) {
+                var deleteMsg = confirm("Do you really want to delete?");
+                if (deleteMsg) {
+                    $.ajax({
+                        type: "POST",
+                        url: SITEURL + '/fullcalendareventmaster/delete',
+                        data: "&id=" + event.id,
+                        success: function (response) {
+                            if(parseInt(response) > 0) {
+                                $('#calendar').fullCalendar('removeEvents', event.id);
+                                displayMessage("Deleted Successfully");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    });
+ 
+    function displayMessage(message) {
+        $(".response").css('display','block');
+        $(".response").html(""+message+"");
+        setInterval(function() { $(".response").fadeOut(); }, 4000);
+    }
+</script>
 </body>
+
 </html>

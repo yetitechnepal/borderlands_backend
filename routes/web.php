@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FullCalendarEventMasterController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -54,4 +56,18 @@ Route::group(['middleware'=>['AuthCheck']], function(){
     Route::post('/packageDestroy', [AdminController::class,'packageDestroy'])->name('package.destroy');
 
     Route::get('/adminPackageQuickdates/{id}', [AdminController::class,'getQuickDates']);
+    Route::post('/addQuickdates', [AdminController::class,'addQuickdates'])->name('quickdates.add');
+    Route::post('/quickdatesDestroy', [AdminController::class,'quickdatesDestroy'])->name('quickdates.destroy');
+
+    Route::get('/adminWhatsIncluded/{id}', [AdminController::class,'getWhatsIncluded']);
+    Route::post('/addWhatsIncluded', [AdminController::class,'addWhatsIncluded'])->name('whatsincluded.add');
+    Route::post('/whatsincludedDestroy', [AdminController::class,'whatsincludedDestroy'])->name('whatsincluded.destroy');
+
+    //fullcalender
+    Route::get('/fullcalendareventmaster',[FullCalendarEventMasterController::class,'index']);
+    Route::post('/fullcalendareventmaster/create',[FullCalendarEventMasterController::class,'create']);
+    Route::post('/addEvent', [FullCalendarEventMasterController::class,'addEvent'])->name('event.add');
+    Route::post('/fullcalendareventmaster/update',[FullCalendarEventMasterController::class,'update']);
+    Route::post('/fullcalendareventmaster/delete',[FullCalendarEventMasterController::class,'destroy']);
+    
 });

@@ -11,7 +11,7 @@ use App\Models\Company;
 use App\Models\Package;
 use App\Models\Quickdate;
 use App\Models\Service;
-
+use App\Models\Packageinclude;
 class AdminController extends Controller
 {
     public function index(){
@@ -383,16 +383,54 @@ class AdminController extends Controller
         ->with('quickdates', Quickdate::where('package_id','=',$id)->orderBy('updated_at','Desc')->get());
     }
 
-    public function addQuickDates(Request $request){
+    public function addQuickdates(Request $request){
         $quickdate = new Quickdate;
-        $quickdate->title = $request->title;
+        $quickdate->quickdate = date("d-M-y", strtotime($request->quickdate));;
+        $quickdate->days = $request->days;
+        $quickdate->rate = $request->rate;
+        $quickdate->occupancy = "1";
+        $quickdate->package_id = $request->id;
+
+        $save = $quickdate->save();
+        if($save){
+            return back()->with('success','Quick Dates Added');
+        }else{
+            return back()->with('fail','Something went wrong, try again later');
+        }
+
     }
 
-    public function getWhatsIncludes($id){
+    public function quickdatesDestroy(Request $request){
+        $package = Quickdate::findOrFail($request->id);
+        $package->delete();
+        return back()->with('success','Quickdate Deleted');
+    }
+
+    public function getWhatsIncluded($id){
         $package = ['PackageInfo'=>Package::orderBy('updated_at','Desc')
         ->where('id','=',$id)    
         ->first()];
-        return view('bac.package.index',$company)
-        ->with('packages', Package::where('companies_id','=',$id)->orderBy('updated_at','Desc')->get());
+        return view('bac.package.whatsincluded',$package)
+        ->with('whatsincludeds', Packageinclude::where('package_id','=',$id)->orderBy('updated_at','Desc')->get());
     }
+
+    public function addWhatsIncluded(Request $request){
+        $whatsincluded = new Packageinclude;
+        $whatsincluded->title = $request->title;
+        $whatsincluded->description = $request->description;
+        $whatsincluded->package_id = $request->id;
+        $save = $whatsincluded->save();
+        if($save){
+            return back()->with('success','Added Successfully');
+        }else{
+            return back()->with('fail','Something went wrong, try again later');
+        }
+    }
+
+    public function whatsincludedDestroy(Request $request){
+        $package = Packageinclude::findOrFail($request->id);
+        $package->delete();
+        return back()->with('success','Quickdate Deleted');
+    }
+
 }

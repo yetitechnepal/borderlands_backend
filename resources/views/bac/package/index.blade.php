@@ -200,7 +200,7 @@
 									<td>{{$package->title}}</td>
 									<td>{{$package->subtitle}}</td>
 									<td>{{$package->aboutPackage}}</td>
-									<td><a href="{{$package->id}}">View All</a></td>
+									<td><a href="/adminWhatsIncluded/{{$package->id}}">View All</a></td>
 									<td><a href="/adminPackageQuickdates/{{$package->id}}">View All</a></td>
 									<!-- <td>{{$package->rating}}</td>
 									<td>{{$package->Duration}}</td>
