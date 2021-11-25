@@ -72,15 +72,15 @@
 										<div class="row">
 											<div class="col-sm-12">
 												<div class="form-group form-group-default">
-													<label>Select Date</label>
-													<input required id="quickdate" type="date" class="form-control" name='quickdate' placeholder="quickdate">
+													<label>Start Date</label>
+													<input required id="quickdate" type="date" class="form-control" name='stdate' placeholder="quickdate">
 												</div>
 											</div>
 
                                             <div class="col-sm-12">
 												<div class="form-group form-group-default">
-													<label>Days</label>
-													<input required id="days" type="text" class="form-control" name='days' placeholder="days">
+                                                    <label>End Date</label>
+													<input required id="quickdate" type="date" class="form-control" name='enddate' placeholder="quickdate">
 												</div>
 											</div>
 
@@ -107,8 +107,14 @@
                             <div class="card-list col-md-2">
                                 <div class="item-list " style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);padding-right:10px" >
                                     <div class="info-user ml-3">
-                                        <div class="username">Date : {{$quickdate->quickdate}}</div>
-                                        <div class="status">Days   :{{$quickdate->days}}</div>
+                                        <div class="username">Date : {{date("d-M-y", strtotime($quickdate->stdate))." to ".date("d-M-y", strtotime($quickdate->enddate))}}</div>
+                                        <div class="status">Days   :<?php 
+                                        $datetime1 = new DateTime($quickdate->stdate);
+                                        $datetime2 = new DateTime($quickdate->enddate);
+                                        $interval = $datetime1->diff($datetime2);
+                                        $days = $interval->format('%a');
+                                        echo $days." Days ".($days-1)." Nights";
+                                        ?></div>
                                         <div class="status">Rate: {{$quickdate->rate}}\per person</div>
                                         <div class="status"></div>
                                     </div>

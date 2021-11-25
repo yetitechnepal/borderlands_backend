@@ -30,4 +30,5 @@ Route::get('/getPackageDetail/{id}',[HomeController::class,'getPackageDetail']);
 Route::get('/getHighLights',[HomeController::class,'getHighLights']);
 Route::get('/getExploreVideos',[HomeController::class,'getExploreVideos']);
 Route::get('/getCompanyHotDeals/{id}',[HomeController::class,'getCompanyHotDeals']);
+Route::post('/makeBooking',[HomeController::class,'makeBooking']);
 

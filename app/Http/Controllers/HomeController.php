@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderShipped;
 use App\Models\Banner;
 use App\Models\Company;
 use App\Models\Testimonial;
@@ -11,6 +13,8 @@ use App\Models\Service;
 use App\Models\Packageinclude;
 use App\Models\Photo;
 use App\Models\Video;
+use App\Models\Booking;
+use App\Models\Quickdate;
 
 
  /**
@@ -177,6 +181,84 @@ class HomeController extends Controller
 
         return ['message'=>'success',
                 'data'=>$data]; 
+    }
+
+    public function makeBooking(Request $request){
+        if($request->filled('transctionId')){
+
+            $quick = Quickdate::where('id','=',$request->quickdate_id)->where('package_id','=',$request->package_id)->first();
+            if($quick->rate*$request->noOfGuests == $request->billedAmount){
+                $quickdate = new Booking;
+                $quickdate->name = $request->name;
+                $quickdate->email = $request->email;
+                $quickdate->phone = $request->phone;
+                $quickdate->noOfGuests = $request->noOfGuests;
+                $quickdate->stdate = $request->stdate;
+                $quickdate->enddate = $request->enddate;
+                $quickdate->billedAmount = $request->billedAmount;
+                $quickdate->transctionId = $request->transctionId;
+                $quickdate->quickdate_id = $request->quickdate_id;
+                $quickdate->package_id = $request->package_id;
+
+                $save = $quickdate->save();
+                if($save){
+
+                    Mail::to($request->email)->send(new OrderShipped());
+
+                    return back()->with('success','Booking Success!');
+                }else{
+                    $quickdate1 = new Booking;
+                    $quickdate1->transctionId = $request->transctionId;
+                    $quickdate1->save();
+                    return back()->with('fail','Something went wrong, try again later! please contact service provider for more details!');
+                }
+                
+            }else{
+                $quickdate = new Booking;
+                $quickdate->name = $request->name;
+                $quickdate->email = $request->email;
+                $quickdate->phone = $request->phone;
+                $quickdate->noOfGuests = $request->noOfGuests;
+                $quickdate->stdate = $request->stdate;
+                $quickdate->enddate = $request->enddate;
+                $quickdate->billedAmount = $request->billedAmount." - Actual Billing Amount: NPR ".$quick->rate*$request->noOfGuests;
+                $quickdate->transctionId = $request->transctionId;
+                $quickdate->quickdate_id = $request->quickdate_id;
+                $quickdate->package_id = $request->package_id;
+
+                $save = $quickdate->save();
+                if($save){
+                    return back()->with('success','Booking Success!');
+                }else{
+                    $quickdate1 = new Booking;
+                    $quickdate1->transctionId = $request->transctionId;
+                    $quickdate1->save();
+                    return back()->with('fail','Something went wrong, try again later! please contact service provider for more details!');
+                }
+            }
+        }else{
+
+                $quickdate = new Booking;
+                $quickdate->name = $request->name;
+                $quickdate->email = $request->email;
+                $quickdate->phone = $request->phone;
+                $quickdate->noOfGuests = $request->noOfGuests;
+                $quickdate->stdate = $request->stdate;
+                $quickdate->enddate = $request->enddate;
+                $quickdate->billedAmount = "0";
+                $quickdate->transctionId = "NO TRANSACTION ID";
+                $quickdate->quickdate_id = $request->quickdate_id;
+                $quickdate->package_id = $request->package_id;
+
+                $save = $quickdate->save();
+                if($save){
+                    return back()->with('success','Booking Success!');
+                }else{
+                    return back()->with('fail','Something went wrong, try again later! please contact service provider for more details!');
+                }
+            
+        }
+        
     }
 
     public function getEvents($month){

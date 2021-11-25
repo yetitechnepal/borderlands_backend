@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\Quickdate;
 use Redirect,Response;
 
 class FullCalendarEventMasterController extends Controller
@@ -16,7 +17,13 @@ class FullCalendarEventMasterController extends Controller
          $start = (!empty($_GET["start"])) ? ($_GET["start"]) : ('');
          $end = (!empty($_GET["end"])) ? ($_GET["end"]) : ('');
  
-         $data = Event::whereDate('start', '>=', $start)->whereDate('end',   '<=', $end)->get(['id','title','start', 'end']);
+        //  $data = Event::whereDate('start', '>=', $start)->whereDate('end',   '<=', $end)->get(['id','title','start', 'end']);
+         $a = Event::selectRaw('id,title as title,start,end,"Event" as type')->whereRaw('start >= '.$start.' OR end <='. $end);
+         $data = Quickdate::selectRaw('quickdates.id,CONCAT(packages.title," - NPR ",quickdates.rate)    as title,stdate as start,enddate as end,"Quick Date" as type')
+         ->whereRaw('stdate >= '.$start.' OR enddate <='. $end)
+         ->join('packages','packages.id','=','quickdates.package_id')
+         ->union($a)
+         ->get(['id','title','start', 'end']);
          return Response::json($data);
         }
         return view('bac.calendar.index');

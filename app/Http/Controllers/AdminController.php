@@ -338,7 +338,7 @@ class AdminController extends Controller
     }
 
     public function savePackages(Request $request){
-        $package = Package::findOrFail($request->id);;
+        $package = Package::findOrFail($request->id);
         $package->title = $request->title;
         $package->subtitle = $request->subtitle;
         $package->aboutPackage = $request->aboutPackage;
@@ -380,13 +380,14 @@ class AdminController extends Controller
         ->where('id','=',$id)    
         ->first()];
         return view('bac.package.quickdates',$package)
-        ->with('quickdates', Quickdate::where('package_id','=',$id)->orderBy('updated_at','Desc')->get());
+        ->with('quickdates', Quickdate::where('package_id','=',$id)->where('status','=',1)->orderBy('updated_at','Desc')->get());
     }
 
     public function addQuickdates(Request $request){
         $quickdate = new Quickdate;
-        $quickdate->quickdate = date("d-M-y", strtotime($request->quickdate));;
-        $quickdate->days = $request->days;
+        // $quickdate->quickdate = date("d-M-y", strtotime($request->quickdate));;
+        $quickdate->stdate = $request->stdate;
+        $quickdate->enddate = $request->enddate;
         $quickdate->rate = $request->rate;
         $quickdate->occupancy = "1";
         $quickdate->package_id = $request->id;
@@ -402,8 +403,14 @@ class AdminController extends Controller
 
     public function quickdatesDestroy(Request $request){
         $package = Quickdate::findOrFail($request->id);
-        $package->delete();
-        return back()->with('success','Quickdate Deleted');
+        // $package->delete();
+        $package->status = 0;
+        $save = $package->save();
+        if($save){
+            return back()->with('success','Quick Dates Removed');
+        }else{
+            return back()->with('fail','Something went wrong, try again later');
+        }
     }
 
     public function getWhatsIncluded($id){
