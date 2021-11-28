@@ -14,7 +14,9 @@ use App\Models\Packageinclude;
 use App\Models\Photo;
 use App\Models\Video;
 use App\Models\Booking;
+use App\Models\Event;
 use App\Models\Quickdate;
+use App\Models\Code;
 
 
  /**
@@ -111,6 +113,8 @@ class HomeController extends Controller
                     ->with('photos')
                     ->with('includes')
                     ->get()
+                    ,
+                    'quickdates'=> Quickdate::where('package_id','=',$id)->get()
                 ];
 
         return ['message'=>'success',
@@ -187,6 +191,10 @@ class HomeController extends Controller
         if($request->filled('transctionId')){
 
             $quick = Quickdate::where('id','=',$request->quickdate_id)->where('package_id','=',$request->package_id)->first();
+            $package = Package::where('id','=',$request->package_id)->first();
+            $company = Company::select('companyName','companyAddress','companyPhone1','companyEmail')->join('packages','packages.companies_id','=','companies.id')
+            ->where('packages.id','=',$request->package_id)
+            ->first();
             if($quick->rate*$request->noOfGuests == $request->billedAmount){
                 $quickdate = new Booking;
                 $quickdate->name = $request->name;
@@ -202,15 +210,20 @@ class HomeController extends Controller
 
                 $save = $quickdate->save();
                 if($save){
-
-                    Mail::to($request->email)->send(new OrderShipped());
-
-                    return back()->with('success','Booking Success!');
+                    try {
+                        Mail::to($request->email)->send(new OrderShipped($request,$package,$company,$quickdate,$quick));
+                        return ['message'=>'Order Success. Please Check your email for order invoice.',
+                        'orderDetails'=>$quickdate];
+                    } catch (\Throwable $th) {
+                        return ['message'=>'Order Success but email not sent!',
+                        'orderDetails'=>$quickdate];
+                    }
                 }else{
                     $quickdate1 = new Booking;
                     $quickdate1->transctionId = $request->transctionId;
                     $quickdate1->save();
-                    return back()->with('fail','Something went wrong, try again later! please contact service provider for more details!');
+                    
+                    return ['message'=>'Invalid Form Data'];
                 }
                 
             }else{
@@ -228,12 +241,20 @@ class HomeController extends Controller
 
                 $save = $quickdate->save();
                 if($save){
-                    return back()->with('success','Booking Success!');
+                    try {
+                        Mail::to($request->email)->send(new OrderShipped($request,$package,$company,$quickdate,$quick));
+                        return ['message'=>'Order Success but amount didnot match',
+                        'orderDetails'=>$quickdate];
+                    } catch (\Throwable $th) {
+                        return ['message'=>'Order Success but email not sent!',
+                        'orderDetails'=>$quickdate];
+                    }
                 }else{
                     $quickdate1 = new Booking;
                     $quickdate1->transctionId = $request->transctionId;
                     $quickdate1->save();
-                    return back()->with('fail','Something went wrong, try again later! please contact service provider for more details!');
+                    
+                    return ['message'=>'Couldnot save data'];
                 }
             }
         }else{
@@ -252,7 +273,7 @@ class HomeController extends Controller
 
                 $save = $quickdate->save();
                 if($save){
-                    return back()->with('success','Booking Success!');
+                    return ['message'=>'Sent for Enquiry'];
                 }else{
                     return back()->with('fail','Something went wrong, try again later! please contact service provider for more details!');
                 }
@@ -261,7 +282,22 @@ class HomeController extends Controller
         
     }
 
-    public function getEvents($month){
-        
+    public function getEvents($start, $end){
+ 
+         $a = Event::selectRaw('id,title as title,start,end,"Event" as type')->whereRaw('start >= '.$start.' OR end <='. $end);
+         $data = Quickdate::selectRaw('quickdates.id,CONCAT(packages.title," - NPR ",quickdates.rate)    as title,stdate as start,enddate as end,"Quick Date" as type')
+         ->whereRaw('stdate >= '.$start.' OR enddate <='. $end)
+         ->join('packages','packages.id','=','quickdates.package_id')
+         ->union($a)
+         ->get(['id','title','start', 'end']);
+
+         return ['message'=>'success',
+                        'data'=>$data];
+    }
+
+    public function getCodes(){
+        $data =  Code::all();
+        return ['message'=>'success',
+                        'data'=>$data];
     }
 }

@@ -16,9 +16,18 @@ class OrderShipped extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public $req;
+    public $pkg;
+    public $com;
+    public $book;
+    public $quick;
+    public function __construct($request,$package,$company,$quickdate,$quick)
     {
-        //
+        $this->req = $request;
+        $this->pkg = $package;
+        $this->com = $company;
+        $this->book = $quickdate;
+        $this->quick = $quick;
     }
 
     /**
@@ -28,12 +37,13 @@ class OrderShipped extends Mailable
      */
     public function build()
     {
-        return $this->from('info@theyetitech.com',"Yeti Tech Nepal")
-        ->subject("Payment Success")
+        return $this->from('alish@alishmanandhar.com.np',$this->com['companyName'])
+        ->subject("Payment Success - View Invoice")
         ->markdown("bac.mails.index")
-        ->with([
-            'name' => "Yeti Tech",
-            'link' => 'facebook.com'
-        ]);
+        ->with('book',$this->book)
+        ->with('pkg',$this->pkg)
+        ->with('com',$this->com)
+        ->with('quick',$this->quick)
+        ;
     }
 }
