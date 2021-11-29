@@ -17,6 +17,8 @@ use App\Models\Booking;
 use App\Models\Event;
 use App\Models\Quickdate;
 use App\Models\Code;
+use App\Models\Payment;
+use Illuminate\Support\Str;
 
 
  /**
@@ -188,7 +190,27 @@ class HomeController extends Controller
     }
 
     public function makeBooking(Request $request){
-        if($request->filled('transctionId')){
+        // if($request->filled('transctionId')){
+
+            if(!$request->filled('quickdate_id')){
+                $quickdate = new Booking;
+                $quickdate->name = $request->name;
+                $quickdate->email = $request->email;
+                $quickdate->phone = $request->phone;
+                $quickdate->noOfGuests = $request->noOfGuests;
+                $quickdate->stdate = $request->stdate;
+                $quickdate->enddate = $request->enddate;
+                $quickdate->transctionId = "Payment First Step";
+                $quickdate->package_id = $request->package_id;
+                $quickdate->uuid = Str::uuid()->toString();
+                $save = $quickdate->save();
+                if($save){
+                    return ['message'=>'Sent for enquiry!'];
+                }
+                else{
+                    return response(['message'=>'Error'], 400);
+                }
+            }
 
             $quick = Quickdate::where('id','=',$request->quickdate_id)->where('package_id','=',$request->package_id)->first();
             $package = Package::where('id','=',$request->package_id)->first();
@@ -204,26 +226,27 @@ class HomeController extends Controller
                 $quickdate->stdate = $request->stdate;
                 $quickdate->enddate = $request->enddate;
                 $quickdate->billedAmount = $request->billedAmount;
-                $quickdate->transctionId = $request->transctionId;
+                $quickdate->transctionId = "Payment First Step";
                 $quickdate->quickdate_id = $request->quickdate_id;
                 $quickdate->package_id = $request->package_id;
+                $quickdate->uuid = Str::uuid()->toString();
 
                 $save = $quickdate->save();
                 if($save){
-                    try {
-                        Mail::to($request->email)->send(new OrderShipped($request,$package,$company,$quickdate,$quick));
-                        return ['message'=>'Order Success. Please Check your email for order invoice.',
-                        'orderDetails'=>$quickdate];
-                    } catch (\Throwable $th) {
-                        return ['message'=>'Order Success but email not sent!',
-                        'orderDetails'=>$quickdate];
-                    }
+                    // try {
+                    //     Mail::to($request->email)->send(new OrderShipped($request,$package,$company,$quickdate,$quick));
+                    return ['message'=>'Success',
+                        'uuid'=>$quickdate->uuid];
+                    // } catch (\Throwable $th) {
+                    //     return ['message'=>'Order Success but email not sent!',
+                    //     'orderDetails'=>$quickdate];
+                    // }
                 }else{
-                    $quickdate1 = new Booking;
-                    $quickdate1->transctionId = $request->transctionId;
-                    $quickdate1->save();
+                    // $quickdate1 = new Booking;
+                    // $quickdate1->transctionId = $request->transctionId;
+                    // $quickdate1->save();
                     
-                    return ['message'=>'Invalid Form Data'];
+                    return response(['message'=>'Error'], 400);
                 }
                 
             }else{
@@ -235,58 +258,100 @@ class HomeController extends Controller
                 $quickdate->stdate = $request->stdate;
                 $quickdate->enddate = $request->enddate;
                 $quickdate->billedAmount = $request->billedAmount." - Actual Billing Amount: NPR ".$quick->rate*$request->noOfGuests;
-                $quickdate->transctionId = $request->transctionId;
+                $quickdate->transctionId = "Payment First Step";
                 $quickdate->quickdate_id = $request->quickdate_id;
                 $quickdate->package_id = $request->package_id;
+                $quickdate->uuid = Str::uuid()->toString();
 
                 $save = $quickdate->save();
                 if($save){
-                    try {
-                        Mail::to($request->email)->send(new OrderShipped($request,$package,$company,$quickdate,$quick));
-                        return ['message'=>'Order Success but amount didnot match',
-                        'orderDetails'=>$quickdate];
-                    } catch (\Throwable $th) {
-                        return ['message'=>'Order Success but email not sent!',
-                        'orderDetails'=>$quickdate];
-                    }
+                    // try {
+                    //     Mail::to($request->email)->send(new OrderShipped($request,$package,$company,$quickdate,$quick));
+                    return ['message'=>'Order Success but amount didnot match',
+                        'orderDetails'=>$quickdate->uuid];
+                    // } catch (\Throwable $th) {
+                    //     return ['message'=>'Order Success but email not sent!',
+                    //     'orderDetails'=>$quickdate];
+                    // }
                 }else{
-                    $quickdate1 = new Booking;
-                    $quickdate1->transctionId = $request->transctionId;
-                    $quickdate1->save();
+                    // $quickdate1 = new Booking;
+                    // $quickdate1->transctionId = $request->transctionId;
+                    // $quickdate1->save();
                     
-                    return ['message'=>'Couldnot save data'];
+                    return response(['message'=>'Error'], 400);
                 }
             }
-        }else{
+        // }else{
 
-                $quickdate = new Booking;
-                $quickdate->name = $request->name;
-                $quickdate->email = $request->email;
-                $quickdate->phone = $request->phone;
-                $quickdate->noOfGuests = $request->noOfGuests;
-                $quickdate->stdate = $request->stdate;
-                $quickdate->enddate = $request->enddate;
-                $quickdate->billedAmount = "0";
-                $quickdate->transctionId = "NO TRANSACTION ID";
-                $quickdate->quickdate_id = $request->quickdate_id;
-                $quickdate->package_id = $request->package_id;
+                // $quickdate = new Booking;
+                // $quickdate->name = $request->name;
+                // $quickdate->email = $request->email;
+                // $quickdate->phone = $request->phone;
+                // $quickdate->noOfGuests = $request->noOfGuests;
+                // $quickdate->stdate = $request->stdate;
+                // $quickdate->enddate = $request->enddate;
+                // $quickdate->billedAmount = "0";
+                // $quickdate->transctionId = "NO TRANSACTION ID";
+                // $quickdate->quickdate_id = $request->quickdate_id;
+                // $quickdate->package_id = $request->package_id;
 
-                $save = $quickdate->save();
-                if($save){
-                    return ['message'=>'Sent for Enquiry'];
-                }else{
-                    return back()->with('fail','Something went wrong, try again later! please contact service provider for more details!');
-                }
+                // $save = $quickdate->save();
+                // if($save){
+                //     return ['message'=>'Sent for Enquiry'];
+                // }else{
+                //     return back()->with('fail','Something went wrong, try again later! please contact service provider for more details!');
+                // }
             
-        }
+        // }
         
     }
 
-    public function getEvents($start, $end){
+    public function paymentSuccess(Request $request){
+        if($request->filled('transactionID')){
+            if(Payment::where('transactionID','=',$request->transactionID)->count() > 0){
+                return response(['message'=>'Error! Dublicate Transaction ID'], 400);
+            }else{
+                $pay = new Payment;
+                if($request->filled('order_id')){
+                    $pay->order_id = $request->order_id;
+                }else{
+                    $pay->order_id = "Null";
+                }
+                
+                $pay->transactionID = $request->transactionID;
+                $save = $pay->save();
+
+                $order = Booking::where('uuid','=',$request->order_id)->first();
+                if($order===null){
+                    return ['message'=>'couldnot find order. Transaction Saved!'];
+                }
+                else{
+                    if($order->transctionId == "Payment First Step"){
+                        $order->transctionId =  $request->transactionID;
+                        $order->save();
+    
+                        if($save){
+                            return ['message'=>'Success'];
+                        }else{
+                            return back()->with('fail','Something went wrong, try again later! please contact service provider for more details!');
+                        }
+                    }else{
+                        return ['message'=>'Payment Was already Done for this order!'];
+                    }
+                    
+                }
+                
+            }
+
+        }else{
+            return response(['message'=>'Error! Hasnot been paid yet'], 400);
+        }
+    }
+
+    public function getEvents(){
  
          $a = Event::selectRaw('id,title as title,start,end,"Event" as type')->whereRaw('start >= '.$start.' OR end <='. $end);
          $data = Quickdate::selectRaw('quickdates.id,CONCAT(packages.title," - NPR ",quickdates.rate)    as title,stdate as start,enddate as end,"Quick Date" as type')
-         ->whereRaw('stdate >= '.$start.' OR enddate <='. $end)
          ->join('packages','packages.id','=','quickdates.package_id')
          ->union($a)
          ->get(['id','title','start', 'end']);

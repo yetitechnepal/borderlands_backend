@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\Package;
 use App\Models\Quickdate;
 use App\Models\Service;
+use App\Models\Booking;
 use App\Models\Packageinclude;
 class AdminController extends Controller
 {
@@ -166,14 +167,14 @@ class AdminController extends Controller
     }
 
     public function getCompanies(){
-        return view('bac.company.index')->with('companies', Company::orderBy('updated_at','Desc')->get());
+        return view('bac.company.index')->with('companies', Company::orderBy('updated_at','Desc')->where('status','=','active')->get());
     }
 
-    public function companyDestroy(Request $request){
-        $company = Company::findOrFail($request->id);
-        $company->delete();
-        return back()->with('success','Company deleted');
-    }
+    // public function companyDestroy(Request $request){
+    //     $company = Company::findOrFail($request->id);
+    //     $company->delete();
+    //     return back()->with('success','Company deleted');
+    // }
 
     public function addCompany(Request $request){
         $company = new Company;
@@ -243,6 +244,17 @@ class AdminController extends Controller
         ->first()];
         return view('bac.company.companyDetail',$company)
         ->with('services', Service::where('companies_id','=',$id)->orderBy('updated_at','Desc')->get());
+    }
+
+    public function companyDestroy(Request $request){
+        $service = Company::findOrFail($request->id);
+        $service->status = 'deleted';
+        $save = $service->save();
+        if($save){
+            return back()->with('success','deleted');
+        }else{
+            return back()->with('fail','Something went wrong, try again later');
+        }
     }
 
     public function addService(Request $request){
@@ -438,6 +450,27 @@ class AdminController extends Controller
         $package = Packageinclude::findOrFail($request->id);
         $package->delete();
         return back()->with('success','Quickdate Deleted');
+    }
+
+    public function getBookings(){
+        return view('bac.booking.index')->with('bookings', 
+            Booking::select('packages.title','companies.companyName','bookings.id','bookings.name','bookings.email','bookings.phone','bookings.status','bookings.noOfGuests','bookings.stdate','bookings.enddate','bookings.billedAmount','bookings.transctionId')
+            ->join('packages','packages.id','=','bookings.package_id')
+            ->join('companies','companies.id','=','packages.companies_id')
+            ->where('bookings.status','=','pending')
+            ->get()
+        );
+    }
+
+    public function saveBooking(Request $request){
+        $booking = Booking::findOrFail($request->id);
+        $booking->status = $request->status;
+        $save = $booking->save();
+        if($save){
+            return back()->with('success','Updated');
+        }else{
+            return back()->with('fail','Something went wrong, try again later');
+        }
     }
 
 }

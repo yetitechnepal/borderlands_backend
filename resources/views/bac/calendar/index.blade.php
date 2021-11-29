@@ -147,6 +147,11 @@
 											<span class="sub-item">Events</span>
 										</a>
 									</li>
+									<li>
+										<a href="/bookings">
+											<span class="sub-item">Bookings</span>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</li>

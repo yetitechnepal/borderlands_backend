@@ -37,10 +37,17 @@
 							<i class="fa fa-list"></i>
 							View Packages
                         </a>
-						<button class="btn btn-secondary btn-round " data-toggle="modal" data-target="#addRowModal">
+						<button class="btn btn-secondary btn-round " data-toggle="modal" data-target="#addRowModal" style="margin-right:5px">
 							<i class="fa fa-plus"></i>
 							Add Services
 						</button>
+                        <form action="{{route('company.destroy')}}" method="post">
+							@csrf
+							<input type="hidden" name="id" value="{{$CompanyInfo['id']}}" >
+							<button type="submit" class="btn  btn-danger btn-round">
+                            Delete this company <i class="fa fa-trash"></i>
+                            </button>
+						</form>
 					</div>
 				</div>
 				<div class="card-body">
@@ -106,6 +113,10 @@
                                                     </div>
                                                     <div class="form-group form-floating-label" style="padding:0px!important;">
                                                         <input id="companyAddress" name="companyAddress" type="text" class="form-control input-border-bottom" required value="{{$CompanyInfo['companyAddress']}}" placeholder="Address">
+                                                    </div>
+                                                    <div class="form-group form-floating-label" style="padding:0px!important;">
+                                                        Change Cover Image
+                                                        <input id="image" name="bannerImage" type="file" class="form-control input-border-bottom">
                                                     </div>
                                             </div>
                                         </div>
