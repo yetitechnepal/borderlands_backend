@@ -350,7 +350,7 @@ class HomeController extends Controller
 
     public function getEvents(){
  
-         $a = Event::selectRaw('id,title as title,start,end,"Event" as type')->whereRaw('start >= '.$start.' OR end <='. $end);
+         $a = Event::selectRaw('id,title as title,start,end,"Event" as type');
          $data = Quickdate::selectRaw('quickdates.id,CONCAT(packages.title," - NPR ",quickdates.rate)    as title,stdate as start,enddate as end,"Quick Date" as type')
          ->join('packages','packages.id','=','quickdates.package_id')
          ->union($a)
