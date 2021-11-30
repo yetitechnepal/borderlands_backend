@@ -326,10 +326,23 @@ class HomeController extends Controller
                     return ['message'=>'couldnot find order. Transaction Saved!'];
                 }
                 else{
+                    
+                    $quick = Quickdate::where('id','=',$order->quickdate_id)->where('package_id','=',$order->package_id)->first();
+                    $package = Package::where('id','=',$order->package_id)->first();
+                    $company = Company::select('companyName','companyAddress','companyPhone1','companyEmail')->join('packages','packages.companies_id','=','companies.id')
+                    ->where('packages.id','=',$order->package_id)
+                    ->first();
+
                     if($order->transctionId == "Payment First Step"){
                         $order->transctionId =  $request->transactionID;
                         $order->save();
-    
+                        
+                        try {
+                            Mail::to($order->email)->send(new OrderShipped($order,$package,$company,$quickdate,$quick));
+                        } catch (\Throwable $th) {
+                            //throw $th;
+                        }
+                        
                         if($save){
                             return ['message'=>'Success'];
                         }else{

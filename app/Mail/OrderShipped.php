@@ -21,9 +21,9 @@ class OrderShipped extends Mailable
     public $com;
     public $book;
     public $quick;
-    public function __construct($request,$package,$company,$quickdate,$quick)
+    public function __construct($order,$package,$company,$quickdate,$quick)
     {
-        $this->req = $request;
+        $this->req = $order;
         $this->pkg = $package;
         $this->com = $company;
         $this->book = $quickdate;
