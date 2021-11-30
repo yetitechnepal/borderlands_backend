@@ -338,7 +338,7 @@ class HomeController extends Controller
                         $order->save();
                         
                         try {
-                            Mail::to($order->email)->send(new OrderShipped($order,$package,$company,$quickdate,$quick));
+                            Mail::to($order->email)->send(new OrderShipped($order,$package,$company,$order,$quick));
                         } catch (\Throwable $th) {
                             //throw $th;
                         }
