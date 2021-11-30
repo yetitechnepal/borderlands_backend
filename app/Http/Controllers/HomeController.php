@@ -18,6 +18,7 @@ use App\Models\Event;
 use App\Models\Quickdate;
 use App\Models\Code;
 use App\Models\Payment;
+use App\Models\Offer;
 use Illuminate\Support\Str;
 
 
@@ -375,6 +376,15 @@ class HomeController extends Controller
 
     public function getCodes(){
         $data =  Code::all();
+        return ['message'=>'success',
+                        'data'=>$data];
+    }
+
+    public function getWhatWeOffers(){
+        $data =  Offer::
+        select('companies.companyName','offers.title','offers.image')
+        ->join('companies','companies.id','=','offers.companies_id')
+        ->limit(6)->get();
         return ['message'=>'success',
                         'data'=>$data];
     }

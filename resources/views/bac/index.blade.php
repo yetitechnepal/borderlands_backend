@@ -116,12 +116,17 @@
 											<span class="sub-item">Testimonials</span>
 										</a>
 									</li>
+									
 									<li>
 										<a href="/adminCompany">
 											<span class="sub-item">Companies</span>
 										</a>
 									</li>
-									
+									<li>
+										<a href="/adminOffer">
+											<span class="sub-item">What we offer?</span>
+										</a>
+									</li>
 									<li>
 										<a href="/adminVideo">
 											<span class="sub-item">Videos</span>

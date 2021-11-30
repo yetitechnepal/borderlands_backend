@@ -12,6 +12,7 @@ use App\Models\Package;
 use App\Models\Quickdate;
 use App\Models\Service;
 use App\Models\Booking;
+use App\Models\Offer;
 use App\Models\Packageinclude;
 class AdminController extends Controller
 {
@@ -458,6 +459,7 @@ class AdminController extends Controller
             ->join('packages','packages.id','=','bookings.package_id')
             ->join('companies','companies.id','=','packages.companies_id')
             ->where('bookings.status','=','pending')
+            ->where('bookings.quickdate_id','<>',null)
             ->get()
         );
     }
@@ -468,6 +470,68 @@ class AdminController extends Controller
         $save = $booking->save();
         if($save){
             return back()->with('success','Updated');
+        }else{
+            return back()->with('fail','Something went wrong, try again later');
+        }
+    }
+
+    public function getOffer(){
+        return view('bac.offer.index')
+        ->with('offers', 
+            Offer::select('companies.companyName','offers.title','offers.image','offers.id')
+            ->join('companies','companies.id','=','offers.companies_id')
+            ->get()
+        )
+        ->with('companies',
+            Company::all()
+        );
+    }
+
+    public function offerDestroy(Request $request){
+        $offer = Offer::findOrFail($request->id);
+        $offer->delete();
+        return back()->with('success','Testimonial deleted');
+    }
+
+    public function addOffer(Request $request){
+        $offer = new Offer;
+        $offer->title = $request->title;
+        $offer->companies_id = $request->companies_id;
+        $destinationPath = public_path('images'); // upload path
+        if ($files = $request->file('image')) {
+            // Define upload path
+         // Upload Orginal Image           
+            $logo = date('YmdHis') . "." . $files->getClientOriginalExtension();
+            $files->move($destinationPath, $logo);
+ 
+         // Save In Database
+            $offer->image =$logo;
+         }
+        $save = $offer->save();
+        if($save){
+            return back()->with('success','Offers Added');
+        }else{
+            return back()->with('fail','Something went wrong, try again later');
+        }
+    }
+
+    public function saveOffer(Request $request){
+        $offer = Offer::findOrFail($request->id);
+        $offer->title = $request->title;
+        $offer->companies_id = $request->companies_id;
+        $destinationPath = public_path('images'); // upload path
+        if ($files = $request->file('image')) {
+            // Define upload path
+         // Upload Orginal Image           
+            $logo = date('YmdHis') . "." . $files->getClientOriginalExtension();
+            $files->move($destinationPath, $logo);
+ 
+         // Save In Database
+            $offer->image =$logo;
+         }
+        $save = $offer->save();
+        if($save){
+            return back()->with('success','Offers Saved');
         }else{
             return back()->with('fail','Something went wrong, try again later');
         }

@@ -34,4 +34,5 @@ Route::post('/makeBooking',[HomeController::class,'makeBooking']);
 Route::post('/paymentSuccess',[HomeController::class,'paymentSuccess']);
 Route::get('/getEvents',[HomeController::class,'getEvents']);
 Route::get('/getCodes',[HomeController::class,'getCodes']);
+Route::get('/getOffers',[HomeController::class,'getWhatWeOffers']);
 

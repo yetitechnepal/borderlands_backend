@@ -72,5 +72,9 @@ Route::group(['middleware'=>['AuthCheck']], function(){
 
     Route::get('/bookings', [AdminController::class,'getBookings']);
     Route::post('/saveBooking', [AdminController::class,'saveBooking'])->name('booking.save');
-    
+   
+    Route::get('/adminOffer', [AdminController::class,'getOffer']);
+    Route::post('/adminOfferAdd', [AdminController::class,'addOffer'])->name('offer.add');
+    Route::post('/offerDestroy', [AdminController::class,'offerDestroy'])->name('offer.destroy');
+    Route::post('/saveOffer', [AdminController::class,'saveOffer'])->name('offer.save');
 });
