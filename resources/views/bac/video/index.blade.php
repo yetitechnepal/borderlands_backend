@@ -61,7 +61,7 @@
 											<div class="col-sm-12">
 												<div class="form-group form-group-default">
 													<label>title</label>
-													<input required id="title" type="text" class="form-control" name="title" placeholder="fill title">
+													<input required id="title" type="text" value="title" class="form-control" name="title" placeholder="fill title">
 												</div>
 											</div>
 											
@@ -71,9 +71,19 @@
 													<input required id="link" type="text" class="form-control" name="link" placeholder="fill link">
 												</div>
 											</div>
+
+											<div class="col-sm-12">
+												<div class="form-group form-group-default">
+													<label>Thumbnail Image</label>
+
+                                                    <input required type="file" name="thumbnail" id="logo" onchange="loadLogoPreview(this);" class="form-control-file" >
+                                                    <img id="logoPreview" src="" style="width:200px;height:auto;"/>
+												</div>
+											</div>
+
 										</div>
                                         <div class="modal-footer no-bd">
-                                            <button type="submit" id="addBanner" class="btn btn-primary">Add</button>
+                                            <button type="submit" id="addvideo" class="btn btn-primary">Add</button>
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                         </div>
 									</form>
@@ -88,6 +98,7 @@
 								<tr>
                                     <th>Title</th>
 									<th>Link</th>
+									<th>Thumbnail Image</th>
 									<th>Edit</th>
 								</tr>
 							</thead>
@@ -95,6 +106,7 @@
 								<tr>
                                     <th>Title</th>
 									<th>Link</th>
+									<th>Thumbnail Image</th>
 									<th>Edit</th>
 								</tr>
 							</tfoot>
@@ -103,6 +115,11 @@
 								<tr>
 									<td>{{$video->title}}</td>
 									<td><a href="{{$video->link}}" target="_blank">{{$video->link}}</a></td>
+									<td>
+                                        <figure class="imagecheck-figure">
+									    	<img style="height:100px;object-fit:cover;" src="{{asset('images').'\\'.$video->thumbnail}}" alt="thamelpark" class="imagecheck-image">
+									    </figure>
+                                    </td>
                                     <td>
 										<div class="form-button-action">
 											<button type="button" data-toggle="modal" data-target="#update{{$video->id}}" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
@@ -117,6 +134,7 @@
 											</form>
 										</div>
 									</td>
+									
 								</tr>
 								<div class="modal fade" id="update{{$video->id}}" tabindex="-1" role="dialog" aria-hidden="true">
 									<div class="modal-dialog" role="document">
@@ -148,9 +166,17 @@
 																<input value="{{$video->link}}" required id="link" type="text" class="form-control" name='link' placeholder="fill link">
 															</div>
 														</div>
+														<div class="col-sm-12">
+															<div class="form-group form-group-default">
+																<label>Thumbnail Image</label>
+
+																<input type="file" name="thumbnail" id="logo" onchange="loadLogoPreview(this);" class="form-control-file" >
+																<img  id="logoPreview" src="{{asset('images').'\\'.$video->thumbnail}}" style="width:200px;height:auto;"/>
+															</div>
+														</div>
 													</div>
 													<div class="modal-footer no-bd">
-														<button type="submit" id="addBanner" class="btn btn-primary">Update</button>
+														<button type="submit" id="addvideo" class="btn btn-primary">Update</button>
 														<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 													</div>
 												</form>

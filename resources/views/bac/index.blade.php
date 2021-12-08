@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>Admin - Borderlands</title>
+	<title>Admin - Eco Adventure</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
 	<link rel="icon" href="{{ asset('/bac/img/icon.ico')}}" type="image/x-icon"/>
 	
@@ -29,7 +29,8 @@
 			<div class="logo-header" data-background-color="blue">
 				
 				<a href="../index.html" class="logo">
-					<img src="{{ asset('/bac/img/logo.ico')}}" style="height:50px" alt="navbar brand" class="navbar-brand">
+					<!-- <img src="{{ asset('/bac/img/logo.png')}}" style="height:50px" alt="navbar brand" class="navbar-brand"> -->
+					<H2 style="color:white;">Admin panel</H2>
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon">
@@ -49,7 +50,7 @@
 			<nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue2">			
 				<div class="container-fluid">
 					<div class="collapse" id="search-nav">
-						<H2 style="color:white;">Borderlands</H2>
+						<H2 style="color:white;">Eco Adventure Center</H2>
 					</div>
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 						
@@ -84,7 +85,7 @@
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-									Borderlands Admin
+									Eoc Adventure Center
 									<span class="user-level">Administrator</span>
 								</span>
 							</a>
@@ -140,9 +141,11 @@
 									</li>
 									<li>
 										<a href="/bookings">
-											<span class="sub-item">Bookings</span>
+											<span class="sub-item">New Bookings</span>
 										</a>
 									</li>
+
+									
 								</ul>
 							</div>
 						</li>

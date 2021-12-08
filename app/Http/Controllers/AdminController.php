@@ -144,7 +144,18 @@ class AdminController extends Controller
         $video = new Video;
         $video->title = $request->title;
         $video->link = $request->link;
-        $video->thumbnail = '';
+        
+        $destinationPath = public_path('images'); // upload path
+        if ($files = $request->file('thumbnail')) {
+            // Define upload path
+         // Upload Orginal Image           
+            $logo = date('YmdHis') . "." . $files->getClientOriginalExtension();
+            $files->move($destinationPath, $logo);
+ 
+         // Save In Database
+            $video->thumbnail =$logo;
+         }
+
         $save = $video->save();
         if($save){
             return back()->with('success','Videos Added');
@@ -157,7 +168,16 @@ class AdminController extends Controller
         $video = Video::findOrFail($request->id);
         $video->title = $request->title;
         $video->link = $request->link;
-        $video->thumbnail = '';
+        $destinationPath = public_path('images'); // upload path
+        if ($files = $request->file('thumbnail')) {
+            // Define upload path
+         // Upload Orginal Image           
+            $logo = date('YmdHis') . "." . $files->getClientOriginalExtension();
+            $files->move($destinationPath, $logo);
+ 
+         // Save In Database
+            $video->thumbnail =$logo;
+         }
         
         $save = $video->save();
         if($save){
@@ -459,7 +479,16 @@ class AdminController extends Controller
             ->join('packages','packages.id','=','bookings.package_id')
             ->join('companies','companies.id','=','packages.companies_id')
             ->where('bookings.status','=','pending')
-            ->where('bookings.quickdate_id','<>',null)
+            ->get()
+        );
+    }
+
+    public function pastBookings(Request $request){
+        return view('bac.booking.pastBookings')->with('bookings', 
+            Booking::select('packages.title','companies.companyName','bookings.id','bookings.name','bookings.email','bookings.phone','bookings.status','bookings.noOfGuests','bookings.stdate','bookings.enddate','bookings.billedAmount','bookings.transctionId')
+            ->join('packages','packages.id','=','bookings.package_id')
+            ->join('companies','companies.id','=','packages.companies_id')
+            ->where('bookings.status','<>','pending')
             ->get()
         );
     }

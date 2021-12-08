@@ -71,6 +71,7 @@ Route::group(['middleware'=>['AuthCheck']], function(){
     Route::post('/fullcalendareventmaster/delete',[FullCalendarEventMasterController::class,'destroy']);
 
     Route::get('/bookings', [AdminController::class,'getBookings']);
+    Route::post('/pastBookings', [AdminController::class,'pastBookings'])->name('pastBookings');
     Route::post('/saveBooking', [AdminController::class,'saveBooking'])->name('booking.save');
    
     Route::get('/adminOffer', [AdminController::class,'getOffer']);

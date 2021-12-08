@@ -123,7 +123,7 @@
 									
                                     <td>
                                         <figure class="imagecheck-figure">
-									    	<img style="height:100px;" src="{{asset('images').'\\'.$banner->bannerImage}}" alt="thamelpark" class="imagecheck-image">
+									    	<img style="height:100px;object-fit:cover;" src="{{asset('images').'\\'.$banner->bannerImage}}" alt="thamelpark" class="imagecheck-image">
 									    </figure>
                                     </td>
                                     <td>
