@@ -272,7 +272,7 @@
 														<div class="col-sm-12">
 															<div class="form-group form-group-default">
 																<label>Rating</label>
-																<input value="{{$package->id}}" required id="rating" type="text" class="form-control" name='rating' placeholder="rating">
+																<input value="{{$package->rating}}" required id="rating" type="text" class="form-control" name='rating' placeholder="rating">
 															</div>
 														</div>
 														<div class="col-sm-12">
