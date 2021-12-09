@@ -8,7 +8,7 @@
             if (stdate.length == 0 || enddate.length == 0) {
                 alert('please select date range');
             }else{
-                document.getElementById("res").innerHTML = '<img style="height:100px;" src="http://127.0.0.1:8000/images/loading.gif" alt="thamelpark" class="imagecheck-image">';
+                document.getElementById("res").innerHTML = '<img style="height:100px;" src="https://eco-adventurecenter.com/images/loading.gif" alt="thamelpark" class="imagecheck-image">';
 
 
                 var xmlhttp = new XMLHttpRequest();
