@@ -570,4 +570,22 @@ class AdminController extends Controller
         }
     }
 
+    public function getReports(){
+        return view('bac.report.report');
+    }
+
+    public function getOrderReport(){
+        return view('bac.report.orderReport')->with('companies',Company::all());
+    }
+
+    public function getOrderList($stdate,$enddate,$status,$company){
+        $data =  ['orderList'=>Booking::select('packages.title','companies.companyName','bookings.id','bookings.name','bookings.email','bookings.phone','bookings.status','bookings.noOfGuests','bookings.stdate','bookings.enddate','bookings.billedAmount','bookings.transctionId')
+        ->join('packages','packages.id','=','bookings.package_id')
+        ->join('companies','companies.id','=','packages.companies_id')
+        ->whereRaw('bookings.stdate BETWEEN "'.$stdate.'" and "'.$enddate.'"')
+        ->where('companies.id','=',$company)
+        ->where('bookings.status','=',$status)
+        ->get()];
+        return ['message'=>'success','data'=>$data];
+    }
 }

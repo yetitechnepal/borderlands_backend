@@ -78,4 +78,8 @@ Route::group(['middleware'=>['AuthCheck']], function(){
     Route::post('/adminOfferAdd', [AdminController::class,'addOffer'])->name('offer.add');
     Route::post('/offerDestroy', [AdminController::class,'offerDestroy'])->name('offer.destroy');
     Route::post('/saveOffer', [AdminController::class,'saveOffer'])->name('offer.save');
+
+    Route::get('/report', [AdminController::class,'getReports']);
+    Route::get('/orderReport', [AdminController::class,'getOrderReport']);
+    Route::get('/getOrderList/{stdate}/{enddate}/{status}/{company}',[AdminController::class,'getOrderList']);
 });

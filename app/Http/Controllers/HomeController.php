@@ -201,6 +201,7 @@ class HomeController extends Controller
                 $quickdate->noOfGuests = $request->noOfGuests;
                 $quickdate->stdate = $request->stdate;
                 $quickdate->enddate = $request->enddate;
+                $quickdate->billedAmount = 0;
                 $quickdate->transctionId = "Payment First Step";
                 $quickdate->package_id = $request->package_id;
                 $quickdate->uuid = Str::uuid()->toString();
@@ -258,7 +259,8 @@ class HomeController extends Controller
                 $quickdate->noOfGuests = $request->noOfGuests;
                 $quickdate->stdate = $request->stdate;
                 $quickdate->enddate = $request->enddate;
-                $quickdate->billedAmount = $request->billedAmount." - Actual Billing Amount: NPR ".$quick->rate*$request->noOfGuests;
+                // $quickdate->billedAmount = $request->billedAmount." - Actual Billing Amount: NPR ".$quick->rate*$request->noOfGuests;
+                $quickdate->billedAmount = $request->billedAmount;
                 $quickdate->transctionId = "Payment First Step";
                 $quickdate->quickdate_id = $request->quickdate_id;
                 $quickdate->package_id = $request->package_id;
