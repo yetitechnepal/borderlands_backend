@@ -8,6 +8,9 @@
             if (stdate.length == 0 || enddate.length == 0) {
                 alert('please select date range');
             }else{
+                document.getElementById("res").innerHTML = '<img style="height:100px;" src="http://127.0.0.1:8000/images/loading.gif" alt="thamelpark" class="imagecheck-image">';
+
+
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
@@ -24,7 +27,10 @@
 
                     for (var i=0; i < items[0].length; i++) {
                         totalCount = totalCount + 1;
-                        totalBill = totalBill + items[0][i].billedAmount; 
+                        if (!isNaN(items[0][i].billedAmount)) {
+                            totalBill = totalBill + parseFloat(items[0][i].billedAmount); 
+                        }
+
                         resp = resp + "<tr> <td>"+(i+1)+"</td> <td>"+items[0][i].companyName+"</td> <td>"+items[0][i].name+"</td> <td>"+items[0][i].phone+"</td> <td>"+items[0][i].title+"<br>"+items[0][i].stdate+"<br>"+items[0][i].enddate+"</td> <td>"+items[0][i].billedAmount+"</td> <td>"+items[0][i].transctionId+"</td> <td>"+items[0][i].status+"</td> </tr>";
                     }
 
