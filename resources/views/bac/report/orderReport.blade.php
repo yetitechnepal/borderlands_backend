@@ -28,6 +28,8 @@
                         resp = resp + "<tr> <td>"+(i+1)+"</td> <td>"+items[0][i].companyName+"</td> <td>"+items[0][i].name+"</td> <td>"+items[0][i].phone+"</td> <td>"+items[0][i].title+"<br>"+items[0][i].stdate+"<br>"+items[0][i].enddate+"</td> <td>"+items[0][i].billedAmount+"</td> <td>"+items[0][i].transctionId+"</td> <td>"+items[0][i].status+"</td> </tr>";
                     }
 
+                    resp = resp + "<tr> <td></td> <td>Count</td> <td>"+totalCount+"</td> <td></td> <td>Total Billed</td> <td>"+totalBill+"</td> <td></td> <td></td> </tr>";
+
                     document.getElementById("res").innerHTML = resp;
 
                 }
