@@ -17,7 +17,11 @@ use App\Models\Packageinclude;
 class AdminController extends Controller
 {
     public function index(){
-        return view('bac.dashboard.index');
+        $count = [
+            'TodayBookingCount'=>Booking::whereRaw('Date(stdate) = CURDATE()')->count(),
+            'TodayEnquiryCount'=>Booking::whereRaw('Date(created_at) = CURDATE()')->count(),
+        ];
+        return view('bac.dashboard.index',$count);
     }
 
     public function getBanner(){
